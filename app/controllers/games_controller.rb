@@ -1,12 +1,15 @@
 require 'open-uri'
 
 class GamesController < ApplicationController
+  # VOWELS = %w(A E I O U Y)
   def new
     letters
   end
 
   def score
     #raise
+    session[:score] = 0 if session[:score].nil?
+
     @letters = params[:letters].split(" ")
     @word = params[:word].upcase
     @included = include_word?(@letters, @word)
@@ -14,6 +17,7 @@ class GamesController < ApplicationController
     wordhash = JSON.parse(open(url).read)
     if wordhash["found"] && @included == true
       @answer = "Congratulations! #{@word} is a perfect word!"
+      session[:score] += @word.length
     elsif @included == false
       @answer = "Sorry but that can't be made from the given letters"
     else
