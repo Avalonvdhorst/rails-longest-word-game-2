@@ -17,7 +17,18 @@ class GamesController < ApplicationController
     wordhash = JSON.parse(open(url).read)
     if wordhash["found"] && @included == true
       @answer = "Congratulations! #{@word} is a perfect word!"
-      session[:score] += @word.length
+      if @word.length == 3
+        session[:score] += 5
+      elsif @word.length == 4
+        session[:score] += 8
+      elsif @word.length == 5
+        session[:score] += 12
+      elsif @word.length == 6
+        session[:score] += 15
+      else @word.length >= 7
+        session[:score] += 30
+      end
+
     elsif @included == false
       @answer = "Sorry but that can't be made from the given letters"
     else
